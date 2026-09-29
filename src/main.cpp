@@ -6,6 +6,8 @@
 #include <vector>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/System/Vector2.hpp>
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
@@ -40,6 +42,15 @@ void render(sf::RenderWindow& window) {
     // the left/right half of the screen.
     // Movement should be governed by the tween function.
     // ====== ====== ======
+    sf::CircleShape circle;
+    circle.setFillColor(sf::Color::White);
+    circle.setRadius(10.0f);
+    static int frame = 0;
+    float t = static_cast<float>(frame % FPS_LIMIT) / FPS_LIMIT;
+    float x = tween(0.0f, WINDOW_WIDTH, t);
+    circle.setPosition(sf::Vector2f{x, (WINDOW_HEIGHT / 3.0f)});
+    window.draw(circle);
+    frame++;
 
     // ====== ====== ======
     // TODO: (Q3) Draw tween function graph with a dot
