@@ -4,7 +4,7 @@
 #include <memory>
 #include <random>
 #include <vector>
-#include <cmath> //std::pow, std::cos
+#include <cmath> //std::pow, std::cos, std::sin
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -13,7 +13,6 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
 const int FPS_LIMIT = 30;
-const int FRAMES_PER_ANIMATION = 60;
 
 // global tween function
 std::function<float(float, float, float)> tween = [](float a, float b, float t) {
@@ -93,7 +92,7 @@ void handleInput(sf::Window& window, bool& shouldQuit) {
                     };
                     break;
                 
-                case sf::Keyboard::Key::Num9:
+                case sf::Keyboard::Key::Num8:
                     // Ease-in cubic: slow start, strong acceleration
                     tween = [](float a, float b, float t) {
                         float e = t * t * t;
@@ -101,10 +100,10 @@ void handleInput(sf::Window& window, bool& shouldQuit) {
                     };
                     break;
                 
-                case sf::Keyboard::Key::Num8:
+                case sf::Keyboard::Key::Num9:
                 // Ease-out back: overshoots the target, then settles
                 tween = [](float a, float b, float t) {
-                    const float c1 = 1.70158f;
+                    const float c1 = 1.70f;
                     const float c3 = c1 + 1;
                     float e = 1 + c3 * std::pow(t - 1, 3) + c1 * std::pow(t - 1, 2);
                     return (1 - e) * a + e * b;
@@ -128,9 +127,9 @@ void render(sf::RenderWindow& window) {
     // ====== ====== ======
     sf::CircleShape circle;
     circle.setFillColor(sf::Color::White);
-    circle.setRadius(10.0f);
+    circle.setRadius(20.0f);
     static int frame = 0;
-    float t = static_cast<float>(frame % FRAMES_PER_ANIMATION) / FRAMES_PER_ANIMATION;
+    float t = static_cast<float>(frame % FPS_LIMIT) / FPS_LIMIT;
     float x = tween(0.0f, WINDOW_WIDTH, t);
     circle.setPosition(sf::Vector2f{x, (WINDOW_HEIGHT / 3.0f)});
     window.draw(circle);
